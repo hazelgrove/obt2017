@@ -1,0 +1,107 @@
+\documentclass[preprint,10pt]{sigplanconf}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage{mathpartir}
+\usepackage{stmaryrd}
+\usepackage{wasysym}
+\usepackage{multicol}
+\usepackage{extarrows}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\definecolor{light-gray}{gray}{0.9}
+\usepackage{soul}
+\setulcolor{red}
+\usepackage{mathpazo}
+\usepackage{colortab}
+\usepackage{url}
+\usepackage{todonotes}
+\usepackage{listings}
+\lstset{tabsize=2,basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
+\usepackage{microtype}
+\sloppy
+\def \TirNameStyle #1{\small\rulename{#1}}
+\renewcommand{\MathparLineskip}{\lineskiplimit=.3\baselineskip\lineskip=.3\baselineskip plus .2\baselineskip}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\makeatletter
+
+\renewcommand\topfraction{0.85}
+\renewcommand\bottomfraction{0.85}
+\renewcommand\textfraction{0.1}
+\renewcommand\floatpagefraction{0.85}
+
+\AtBeginDocument{%
+ \abovedisplayskip=2pt
+ \abovedisplayshortskip=0pt
+ \belowdisplayskip=2pt
+ \belowdisplayshortskip=0pt
+}
+
+\setlength{\floatsep}{10pt}
+\setlength{\textfloatsep}{12pt}
+
+\usepackage[compact]{titlesec}
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+\titlespacing*{\subsection}{0pt}{4pt}{2pt}
+\titlespacing*{\subsubsection}{0pt}{4pt}{2pt}
+\titlespacing*{\paragraph}{0pt}{4pt}{2pt}
+\setlength{\skip\footins}{3pt plus 1px minus 5px}
+
+\usepackage[colorlinks=true,allcolors=blue,breaklinks,draft=false]{hyperref}
+
+\usepackage{enumitem}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=4px plus 2px minus 2px
+  \thm@postskip=\thm@preskip % or whatever, if you don't want them to be equal
+}
+\makeatother
+
+\usepackage{todonotes}
+\usepackage{xcolor}
+
+\input{macros}
+\begin{document}
+
+\conferenceinfo{-}{-}
+\copyrightyear{-}
+\copyrightdata{[to be supplied]}
+
+\preprintfooter{Draft}   % 'preprint' option specified.
+
+\title{Running Partial Programs}
+\authorinfo{
+        Ian Voysey}
+{
+ $^1$~Carnegie Mellon University
+}
+{
+\url{iev@cs.cmu.edu}\\
+\url{http://www.cs.cmu.edu/~iev/}
+}
+
+\maketitle
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+\input{intro}
+
+\section{Language}\label{sec:hz}
+
+\section{Possible Evaluation Strategies}\label{sec:eval}
+
+\section{Related Work}\label{sec:rw}
+
+\clearpage
+
+%% \bibliographystyle{abbrvnat}
+%% \bibliography{bibliography}
+
+\end{document}
