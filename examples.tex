@@ -100,4 +100,24 @@ fun map (f : 'a -> 'b) (l : 'a list) : 'b list =
 if they know the pattern of recursion they wish to follow, but aren't sure
 what to do with each element yet. Here, evaluating the same term produces a
 longer trace: because the body of the function is not yet final after
-substitution, the function calls go through
+substitution, the function calls go through.
+
+\begin{verbatim}
+  trace goes here
+\end{verbatim}
+
+Finally, if our programmer had an idea about how to produce the answer for
+each element but wasn't willing to commit to it yet, she might produce this
+partial term:
+\begin{verbatim}
+fun map (f : 'a -> 'b) (l : 'a list) : 'b list =
+  case l
+   of [] => <||>
+    | x :: xs => <|f x|> :: (map f l)
+\end{verbatim}
+This would produce a trace that reveals what the particular choice would
+look like at each step without actually commiting to it---at which time
+this would look like a very strong candidate implementation:
+\begin{verbatim}
+  trace goes here
+\end{verbatim}
