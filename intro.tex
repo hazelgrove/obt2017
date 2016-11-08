@@ -1,0 +1,24 @@
+In Hazelnut, we describe a simple lambda calculus that allows holes to
+appear in terms. The goal of this work is to give a formal description of
+the process of editing programs---and to give static meaning to every edit
+action on partially finished programs as well as every intermediate state
+that arises in a sequence of edits.
+
+To that end, holes in Hazelnut may appear in types as well as
+expressions. The type system of Hazelnut gives static meaning to these
+terms. On top of that we provide an editing semantics that describes
+transformations between terms with holes in them, and prove a rich
+metatheory about what edits are possible. Hazelnut's edit semantics uses a
+notion of non-empty holes to allow programmers to write terms that are not
+type consistent with their surroundings by delaying the type consistency
+check until the programmer alerts the system that the term under
+construction has been finished.
+
+What Hazelnut does not provide is a way to \emph{run} programs before
+they've been finished. In some sense, an evaluation semantics for terms
+with holes in them is the ultimate debugging tool: if a programmer is
+writing a program and she knows the general structure of what she wants to
+write, but only has some idea of how to fill in all the holes, she can run
+that program to see how each hole is actually used, and what information is
+available at each step, to develop strong intuition about how to use that
+information to acheive her goals.

@@ -1,0 +1,75 @@
+To motivate the purpose of a dynamics for partial programs, we first
+consider a series of examples. Some of these examples are within the language
+of Hazelnut, but the later ones use ML-like syntax that isn't part of the
+definition of the language yet. We intend to extend the language to include
+such constructs, and believe an understanding of the dynamics of such terms
+will help guide that extension.
+
+These examples are written assuming an eager evaluation semantics. It's not
+clear to us if that is important, or what the tradeoffs would be, so this
+should be considered a stylistic detail that is not set in stone.
+
+Since complete terms coincide exactly with the simply typed lambda
+calculus, the evaluation semantics for them are totally
+standard. Therefore, all the examples here are of terms with holes in
+them. We explore the space of what could happen to partial terms during
+evaluation by considering different scenarios of where the holes appear and
+how they're filled.
+
+\subsection{Current Hazelnut}
+Like in standard lambda calculus, function literals do not
+evaluate further, reguardless of their contents:
+\begin{align*}
+  \pval{\hlam{x}{ \hadd{9}{\hehole} }}
+\end{align*}
+
+If we have a function applied to a value, we step to the substitution as
+usual:
+\begin{align*}
+  \pstep
+      {
+        \hap{\hlam{x}{\hadd{9}{\hehole}}}{5}
+      }
+      {
+        \hadd{9}{\hehole}
+      }
+      \\
+      \pstep
+      {
+        \hap{\hlam{x}{\hadd{x}{\hehole}}}{5}
+      }
+      {
+        \hadd{5}{\hehole}
+      }
+\end{align*}
+
+We also substitute inside non-empty holes: otherwise there would be a free
+variable in the result, which would be nonsensical
+\begin{align*}
+  \pstep
+      {
+        \hap{\hlam{x}{\hadd{x}{\hhole{x}}}}{5}
+      }
+      {
+        \hadd{5}{\hhole{5}}
+      }
+\end{align*}
+
+The first non-trivial choice is to also evaluate inside the non-empty hole
+when possible. The motivation for this is that a programmer may run a
+partial program in order to gain insight into what they've written so
+far. Evaluating terms terms that are not yet type-consistent with their
+surroundings XXX.
+\begin{align*}
+  \pstep{
+    \pstep
+        {
+          \hap{\hlam{x}{\hadd{x}{\hhole{\hadd{x}{x}}}}}{5}
+        }
+        {
+          \hadd{5}{\hhole{\hadd{5}{5}}}
+        }
+  }{\hadd{5}{\hhole{10}}}
+\end{align*}
+
+\subsection{Possible Extensions}
