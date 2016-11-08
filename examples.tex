@@ -1,22 +1,20 @@
-To motivate the purpose of a dynamics for partial programs, we first
-consider a series of examples. Some of these examples are within the language
-of Hazelnut, but the later ones use ML-like syntax that isn't part of the
-definition of the language yet. We intend to extend the language to include
-such constructs, and believe an understanding of the dynamics of such terms
-will help guide that extension.
-
-These examples are written assuming an eager evaluation semantics. It's not
-clear to us if that is important, or what the tradeoffs would be, so this
-should be considered a stylistic detail that is not set in stone.
+To motivate the purpose of a dynamics for partial programs, we consider a
+series of examples of how terms with holes in them might step and why.
 
 Since complete terms coincide exactly with the simply typed lambda
 calculus, the evaluation semantics for them are totally
 standard. Therefore, all the examples here are of terms with holes in
 them. We explore the space of what could happen to partial terms during
-evaluation by considering different scenarios of where the holes appear and
-how they're filled.
+evaluation by considering different structures.
+
+These examples are written assuming an eager evaluation semantics. It's not
+clear to us if that is important, or what the tradeoffs would be, so this
+should be considered a stylistic detail that is not set in stone.
 
 \subsection{Current Hazelnut}
+First, we'll consider some examples that are within the small lambda
+calculus that's given by Hazelnut.
+
 Like in standard lambda calculus, function literals do not
 evaluate further, reguardless of their contents:
 \begin{align*}
@@ -56,10 +54,8 @@ variable in the result, which would be nonsensical
 \end{align*}
 
 The first non-trivial choice is to also evaluate inside the non-empty hole
-when possible. The motivation for this is that a programmer may run a
-partial program in order to gain insight into what they've written so
-far. Evaluating terms terms that are not yet type-consistent with their
-surroundings XXX.
+when possible. This follows from the motivation that a programmer may run a
+partial program in order to gain insight into what they've written so far:
 \begin{align*}
   \pstep{
     \pstep
@@ -73,3 +69,35 @@ surroundings XXX.
 \end{align*}
 
 \subsection{Possible Extensions}
+Now we consider a more extended example that's not within the language of
+Hazelnut Instead, we use an ML-like syntax that should be understood
+intuitively. We intend to extend the language to include constructs like
+pattern matching, algebraic datatypes, and recursive functions. We believe
+an understanding of the dynamics of such terms will help guide that
+extension.
+
+Imagine a programmer implementing $$\mathbf{map} : (\alpha \to \beta) \to
+\alpha ~\mathit{list} \to \beta ~\mathit{list}$$ for the first time.
+Provided with the informal specification that the function be applied to
+every element of the list uniformly, she might arrive at the partial term
+\begin{verbatim}
+fun map (f : 'a -> 'b) (l : 'a list) : 'b list =
+  case l
+   of [] => <||>
+    | x :: xs => (f x) :: <||>
+\end{verbatim}
+To see how this partial solution acts, she could then
+\verb|map (fn x => x + 1) [1, 2]| to get
+
+Alternatively, from the same task, the programmer might have produced the
+partial program
+\begin{verbatim}
+fun map (f : 'a -> 'b) (l : 'a list) : 'b list =
+  case l
+   of [] => <||>
+    | x :: xs => <||> :: (map f l)
+\end{verbatim}
+if they know the pattern of recursion they wish to follow, but aren't sure
+what to do with each element yet. Here, evaluating the same term produces a
+longer trace: because the body of the function is not yet final after
+substitution, the function calls go through
