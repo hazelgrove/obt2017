@@ -1,7 +1,15 @@
+Programming language definitions assign meaning to \textit{complete}
+programs. Programmers, however, spend a substantial amount of time
+interacting with \textit{incomplete} programs using tools like program
+editors, or live programming environments thatinterleave editing and
+evaluation. Semanticists have paid comparatively little attention to these
+interactions, so the designers of tools like these lack foundational
+semantic principles comparable to those available to language designers.
+
 In our paper describing the core calculus of Hazelnut, we give static
 meaning to programs with holes in them.\cite{} Attempting to understand
 evaluation for such a language is a natural continuation of this work. The
-main challenge is to produce meaningful notion of type safety---we seek
+main challenge is to recover a meaningful notion of type safety---we seek
 recognizable statements of progress and preservation for terms with holes
 in them, with respect to a dynamic semantics that matches our intuition.
 
