@@ -1,15 +1,18 @@
-To motivate the purpose of a dynamics for partial programs, we consider a
-series of examples of how terms with holes in them might step and why.
+To motivate a dynamic semantics for partial programs, we consider a series
+of examples of how terms with holes in them might step and why.
 
 Since complete terms coincide exactly with the simply typed lambda
-calculus, the evaluation semantics for them are totally
-standard. Therefore, all the examples here are of terms with holes in
-them. We explore the space of what could happen to partial terms during
-evaluation by considering different structures.
+calculus, the dynamic semantics for them are well understood. Therefore,
+all the examples here are terms with holes in them. We explore the space of
+what could happen to incomplete terms during evaluation by considering
+different structures.
 
-These examples are written assuming an eager evaluation semantics. It's not
-clear to us if that is important, or what the tradeoffs would be, so this
-should be considered a stylistic detail that is not set in stone.
+These examples are written in the style of an eager evaluation. It's not
+clear to us if that is important, or what the all of the tradeoffs would
+be, so this should be considered a stylistic detail that is not set in
+stone.
+
+Throughout, we write $\hehole$ to denote a hole in a program.
 
 \subsection{Current Hazelnut}
 First, we'll consider some examples that are within the small lambda
@@ -18,7 +21,7 @@ calculus that's given by Hazelnut.
 Like in standard lambda calculus, function literals do not
 evaluate further, reguardless of their contents:
 \begin{align*}
-  \pval{\hlam{x}{ \hadd{9}{\hehole} }}
+  \pval{(\hlam{x}{ \hadd{9}{\hehole}})}
 \end{align*}
 
 If we have a function applied to a value, we step to the substitution as
@@ -41,8 +44,9 @@ usual:
       }
 \end{align*}
 
-We also substitute inside non-empty holes: otherwise there would be a free
-variable in the result, which would be nonsensical
+We also substitute inside non-empty holes. If we didn't, free variables
+would appear in the result, which would break any familiar notion of
+preservation.
 \begin{align*}
   \pstep
       {
@@ -55,7 +59,8 @@ variable in the result, which would be nonsensical
 
 The first non-trivial choice is to also evaluate inside the non-empty hole
 when possible. This follows from the motivation that a programmer may run a
-partial program in order to gain insight into what they've written so far:
+incomplete program in order to gain insight into what they've written so
+far:
 \begin{align*}
   \pstep{
     \pstep
@@ -69,30 +74,32 @@ partial program in order to gain insight into what they've written so far:
 \end{align*}
 
 \subsection{Possible Extensions}
-Now we consider a more extended example that's not within the language of
-Hazelnut Instead, we use an ML-like syntax that should be understood
+Now we consider a more realistic example that's outside the language of
+Hazelnut. Instead, we use an ML-like syntax that should be understood
 intuitively. We intend to extend the language to include constructs like
 pattern matching, algebraic datatypes, and recursive functions. We believe
-an understanding of the dynamics of such terms will help guide that
-extension.
+an understanding of the dynamic semantics of such terms will help guide
+that extension.
 
 Imagine a programmer implementing $$\mathbf{map} : (\alpha \to \beta) \to
 \alpha ~\mathit{list} \to \beta ~\mathit{list}$$ for the first time.
 Provided with the informal specification that the function be applied to
-every element of the list uniformly, she might arrive at the partial term
+every element of the list uniformly, she might arrive at the incomplete term
 \begin{verbatim}
-fun map (f : 'a -> 'b) (l : 'a list) : 'b list =
+fun map f l =
   case l
    of [] => <||>
     | x :: xs => (f x) :: <||>
 \end{verbatim}
 To see how this partial solution acts, she could then
 \verb|map (fn x => x + 1) [1, 2]| to get
-
-Alternatively, from the same task, the programmer might have produced the
-partial program
 \begin{verbatim}
-fun map (f : 'a -> 'b) (l : 'a list) : 'b list =
+  trace goes here
+\end{verbatim}
+Alternatively, from the same task, the programmer might have produced the
+incomplete program
+\begin{verbatim}
+fun map f l =
   case l
    of [] => <||>
     | x :: xs => <||> :: (map f l)
@@ -108,9 +115,9 @@ substitution, the function calls go through.
 
 Finally, if our programmer had an idea about how to produce the answer for
 each element but wasn't willing to commit to it yet, she might produce this
-partial term:
+incomplete term:
 \begin{verbatim}
-fun map (f : 'a -> 'b) (l : 'a list) : 'b list =
+fun map f l =
   case l
    of [] => <||>
     | x :: xs => <|f x|> :: (map f l)

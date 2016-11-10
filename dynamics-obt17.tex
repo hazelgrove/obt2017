@@ -26,6 +26,7 @@
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}{Conjecture}
 \newtheorem{corollary}{Corollary}
 \newtheorem{definition}{Definition}
 \makeatletter
@@ -64,6 +65,19 @@
 
 \usepackage{todonotes}
 \usepackage{xcolor}
+
+
+\makeatletter
+\providecommand*{\dashv}{%
+  \mathrel{%
+    \mathpalette\@dashv\vdash
+  }%
+}
+\newcommand*{\@dashv}[2]{%
+  \reflectbox{$\m@th#1#2$}%
+}
+\makeatother
+
 
 \input{macros}
 \begin{document}
@@ -105,12 +119,10 @@
 \section{Examples}\label{sec:ex}
 \input{examples}
 
-\section{Related Work}\label{sec:rw}
-\input{eval}
+\section{Type Safety}\label{sec:ts}
+\input{ts}
 
-\clearpage
-
-%% \bibliographystyle{abbrvnat}
-%% \bibliography{bibliography}
+\bibliographystyle{abbrvnat}
+\bibliography{bibliography}
 
 \end{document}

@@ -1,0 +1,27 @@
+In order to state candidates for progress and preservation, we introduce a
+new judgement on terms called \textit{final}. This is because there are
+incomplete programs that we can't evalaute further that are not yet values,
+i.e. $\hadd{9}{\hehole}$.
+
+As terms evolve through their evaluation, we rely on a notion of holes
+being associated with unique names and substitutions, borrowed directly
+from work in contextual modal type theory
+(CMTT). \cite{DBLP:journals/tocl/NanevskiPP08} Hole names correspond to
+metavariables, which appear in $\Delta$ below, and holes themselves to
+closures. CMTT is, in turn, the Curry-Howard interpretation of contextual
+modal logic. This gives us confidence that our approach is not ad hoc, but
+rather rooted in the established logical tradition.
+
+\begin{conjecture}[Progress]
+  If $\emptyset \vdash \hexp{} : \htau{} \dashv \Delta$ then either
+  \begin{enumerate}[label=\roman*)]
+  \item there exists $\hexp'$ such that $\pstep{\hexp{}}{\hexp{}'}$, or
+  \item $\hexp ~\mathbf{final}$
+  \end{enumerate}
+\end{conjecture}
+
+\begin{conjecture}[Preservation]
+  If $\emptyset \vdash \hexp{} : \htau{} \dashv \Delta$ and
+  $\pstep{\hexp}{\hexp'}$ then $\emptyset \vdash \hexp' : \htau{} \dashv
+  \Delta'$ and $\Delta' \subseteq \Delta$.
+\end{conjecture}
