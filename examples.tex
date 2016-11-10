@@ -56,11 +56,7 @@ preservation.
         \hadd{5}{\hhole{5}}
       }
 \end{align*}
-
-The first non-trivial choice is to also evaluate inside the non-empty hole
-when possible. This follows from the motivation that a programmer may run
-a incomplete program in order to gain insight into what she has written so
-far:
+We also evaluate inside the non-empty holes:
 \begin{align*}
   \pstep{
     \pstep
@@ -72,6 +68,8 @@ far:
         }
   }{\hadd{5}{\hhole{10}}}
 \end{align*}
+This allows a programmer to observe the behavior of incomplete solutions
+that may not yet have a type consistent with their surroundings.
 
 \subsection{Extended Hazel}
 Now we consider a more realistic example outside the language of
@@ -87,10 +85,8 @@ Provided with the informal specification that the function be applied to
 every element of the list uniformly, she might arrive at the incomplete
 term
 \begin{lstlisting}
-fun map f l =
-  case l of
-      []    => []
-    | x::xs => $\hehole_1$::(map f l)
+fun map f [] = []
+  | map f (x::xs) = $\hehole_1$::(map f l)
 \end{lstlisting}
 if she knows the pattern of recursion, but are not sure what to do with
 each element yet. Here, evaluating the partial program on a small example
