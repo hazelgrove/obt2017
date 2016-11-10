@@ -1,22 +1,20 @@
-In order to state candidates for progress and preservation, we introduce a
-new judgement on terms called \textit{final}. This is because there are
-incomplete programs that we cannot evalaute further that are not yet
-values, i.e. $\hadd{9}{\hehole}$.
-
-As terms evolve through their evaluation, we rely on a notion of holes
-being associated with unique names and substitutions, borrowed directly
+As terms change through evaluation, we rely on a notion of holes being
+associated with substitutions, closures and unique names borrowed directly
 from work in contextual modal type theory
-(CMTT). \cite{DBLP:journals/tocl/NanevskiPP08} Hole names correspond to
-metavariables, which appear in $\Delta$ below, and holes themselves to
-closures. CMTT is, in turn, the Curry-Howard interpretation of contextual
-modal logic. This gives us confidence that our approach is not ad hoc, but
-rather rooted in the established logical tradition.
+(CMTT)~\cite{DBLP:journals/tocl/NanevskiPP08}. This allows a programmer to
+view the trace as above and identify where each hole is used. CMTT is the
+Curry-Howard interpretation of contextual modal logic, which gives us
+confidence that our approach is rooted in logical tradition. CMTT does not
+provide a way to reason about free metavariables, nor does it include the
+notions of non-empty holes or holes in types which appear prominently in
+Hazelnut, so there is work to be done to extend it to our use case.
 
-Although CMTT provides a basis for our work, it does not provide a way to
-reason about free metavariables, nor does it describe the notions of
-non-empty holes or holes in types which appear prominently in Hazelnut.
-
-With that in mind, we believe that type safety has a form as follows:
+In order to consider type safety, we introduce a new judgement
+$\pfinal{\hexp}$ for incomplete programs that we cannot evaluate further
+because they are values or blocked by a hole. Progress states that a
+well-typed incomplete program will either step or is $\mathbf{final}$;
+preservation states that stepping preserves the type of an incomplete
+program and that no new hole names are created by evaluation.
 
 \begin{conjecture}[Progress]
   If $\emptyset \vdash \hexp{} : \htau{} \dashv \Delta$ then either
@@ -31,6 +29,3 @@ With that in mind, we believe that type safety has a form as follows:
   $\pstep{\hexp}{\hexp'}$ then $\emptyset \vdash \hexp' : \htau{} \dashv
   \Delta'$ and $\Delta' \subseteq \Delta$.
 \end{conjecture}
-
-\MattSays{We should explain these statements in English, highlighting the differences with standard progress and preservation.}
-\MattSays{In particular, the role of $\Delta$, and the precise meaning of $\Delta' \subset \Delta$ probably warrents another sentence or two.}
