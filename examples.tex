@@ -92,49 +92,60 @@ term
 \begin{lstlisting}
 fun map f l =
   case l of
-     []    => $\hehole$
-   | x::xs => (f x)::$\hehole$
+      []    => []
+    | x::xs => $\hehole_1$::(map f l)
 \end{lstlisting}
-To see how this partial solution acts, she could then run it on a small
-example:
+if she knows the pattern of recursion, but are not sure what to do with
+each element yet. Here, evaluating the partial program on a small example
+produces a trace: because the body of the function is not yet final after
+substitution, the function calls continue to evaluate.
 \begin{lstlisting}
    map ($\lambda x.$x+1) [1, 2]
-$\mapsto$ (($\lambda x.$x+1) 1)::$\hehole$
-$\mapsto$ (1+1)::$\hehole$
-$\mapsto$ 2::$\hehole$
+$\mapsto$ $\hehole_1$::(map ($\lambda x.$x+1) [2])
+$\mapsto$ $\hehole_1$::$\hehole_1$::(map ($\lambda x.$x+1) [])
+$\mapsto$ $\hehole_1$::$\hehole_1$::[]
 \end{lstlisting}
-This trace reveals that the solution meets the specification so far but, by
-omitting a recursive call, drops the tail of the list.
+Each hole in the trace is equipped with a tableau that can be inspected by
+the programmer, mapping the in-scope variables names from the source to the
+types and values at run-time. These are shown for the the two
+instantiations of $\hehole_1$ in this example in Table \ref{tabx}.
+\begin{table}[!htb]
+  \label{tabx}
+  \caption{Global caption}
+  \begin{subtable}{.6\linewidth}
+      \centering
+      \caption{}
+          \begin{tabular}{c|c|c}
+      var & $\htau$ & val\\
+      \hline
+      f & int $\to$ int & $\lambda x.x$+1\\
+      l & int list & [1,2]\\
+      x & int & 1\\
+      xs & int list & [2]\\
+    \end{tabular}
+    \end{subtable}%
+    \begin{subtable}{.6\linewidth}
+      \centering
+      \caption{}
+    \begin{tabular}{c|c|c}
+      var & $\htau$ & val\\
+      \hline
+      f & int $\to$ int & $\lambda x.$x+1\\
+      l & int list & [2]\\
+      x & int & 2\\
+      xs & int list & []\\
+    \end{tabular}
+    \end{subtable}
+\end{table}
 
-
-Alternatively, from the same task, the programmer might have produced the
-incomplete program
+This trace might lead the programmer to have more confidence about their
+solution so far, and make a conjecture about how to fill in the one
+hole. If they replace the empty hole with $\hhole{\texttt{f x}}$ and
+reevaluate the test, the trace produced would quickly sugguest that they
+had the solution:
 \begin{lstlisting}
-fun map f l =
-  case l of
-      []    => $\hehole$
-    | x::xs => $\hehole$::(map f l)
+   map ($\lambda x.$x+1) [1, 2]
+$\mapsto$ $\hhole{xx}_1$::(map ($\lambda x.$x+1) [2])
+$\mapsto$ $\hhole{xx}_1$::$\hhole{xx}_1$::(map ($\lambda x.$x+1) [])
+$\mapsto$ $\hhole{xx}_1$::$\hhole{xx}_1$::[]
 \end{lstlisting}
-if they know the pattern of recursion they wish to follow, but are not sure
-what to do with each element yet. Here, evaluating the same term produces a
-longer trace: because the body of the function is not yet final after
-substitution, the function calls go through.
-\begin{verbatim}
-  trace goes here
-\end{verbatim}
-
-Finally, if our programmer had an idea about how to produce the answer for
-each element but was not willing to commit to it yet, she might produce
-this incomplete term:
-\begin{lstlisting}
-fun map f l =
-  case l of
-      [] => $\hehole$
-    | x :: xs => $\hhole{\texttt{ f x }}$ :: (map f l)
-\end{lstlisting}
-This would produce a trace that reveals what the particular choice would
-look like at each step without actually commiting to it---at which time
-this would look like a very strong candidate implementation:
-\begin{verbatim}
-  trace goes here
-\end{verbatim}
