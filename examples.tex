@@ -91,12 +91,12 @@ Imagine a programmer implementing $$\mathbf{map} : (\alpha \to \beta) \to
 \alpha ~\mathit{list} \to \beta ~\mathit{list}$$ for the first time.
 Provided with the informal specification that the function be applied to
 every element of the list uniformly, she might arrive at the incomplete term
-\begin{verbatim}
-fun map f l =
-  case l
-   of [] => <||>
-    | x :: xs => (f x) :: <||>
-\end{verbatim}
+\begin{lstlisting}
+fun map f l = 
+  case l of 
+     []    => $\hehole$
+   | x::xs => (f x)::$\hehole$
+\end{lstlisting}
 To see how this partial solution acts, she could then
 \verb|map (fn x => x + 1) [1, 2]| to get
 \begin{verbatim}
@@ -104,12 +104,12 @@ To see how this partial solution acts, she could then
 \end{verbatim}
 Alternatively, from the same task, the programmer might have produced the
 incomplete program
-\begin{verbatim}
+\begin{lstlisting}
 fun map f l =
-  case l
-   of [] => <||>
-    | x :: xs => <||> :: (map f l)
-\end{verbatim}
+  case l of 
+      []    => $\hehole$
+    | x::xs => $\hehole$::(map f l)
+\end{lstlisting}
 if they know the pattern of recursion they wish to follow, but aren't sure
 what to do with each element yet. Here, evaluating the same term produces a
 longer trace: because the body of the function is not yet final after
@@ -122,12 +122,12 @@ substitution, the function calls go through.
 Finally, if our programmer had an idea about how to produce the answer for
 each element but wasn't willing to commit to it yet, she might produce this
 incomplete term:
-\begin{verbatim}
+\begin{lstlisting}
 fun map f l =
-  case l
-   of [] => <||>
-    | x :: xs => <|f x|> :: (map f l)
-\end{verbatim}
+  case l of
+      [] => $\hehole$
+    | x :: xs => $\hhole{\texttt{ f x }}$ :: (map f l)
+\end{lstlisting}
 This would produce a trace that reveals what the particular choice would
 look like at each step without actually commiting to it---at which time
 this would look like a very strong candidate implementation:

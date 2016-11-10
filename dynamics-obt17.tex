@@ -90,6 +90,17 @@
 
 \newcommand{\MattSays}[1]{{\color{blue}{(MH: #1)}}}
 
+\lstset{emph={%  
+    fun, case, of, match, with, let, in%
+    },emphstyle={\color{blue}\bfseries}%,
+}
+
+\lstset{
+mathescape=true,basicstyle=\ttfamily,%\footnotesize\ttfamily,%
+literate={=>}{$\Rightarrow$}2
+         {<=}{$\leq$}2
+}
+
 \title{Running Incomplete Programs}
 \authorinfo{
   Ian Voysey$^1$
