@@ -18,20 +18,20 @@ transition between editing and exploring the behavior of partial solutions.
 
 The main challenge is to recover a meaningful notion of type safety---we
 seek recognizable statements of progress and preservation for terms with
-holes in them, with respect to a dynamic semantics that matches our
+holes in them \MattSays{introduce the term ``hole'' earlier, when you talk about incomplete programs in paragraph 1}, with respect to a dynamic semantics that matches our
 intuition.
 
-Hazelnut also gives static meaning to transitions between programs with
+Hazelnut also gives static meaning to \MattSays{``edit action''?} transitions between programs with
 holes in them, giving a rich metatheory for the process of writing and
 editing programs. The next step in this facet of the work amounts to live
 programming writ large~\cite{burckhardt2013s}. The existing live
-programming tools do not let a the programmer run programs that aren't done
+programming tools do not let the programmer run programs that are not complete
 yet unless a placeholder value is used to make them seem complete.
 
-In the ideal system, a Hazelnut programmer would be able to write their
+In the ideal system, a Hazelnut programmer writes their
 program with confidence that her edits are all safe. When she arrives at a
 term that she wants to explore more, she can run the incomplete program on
-some test values and observing how the holes in her program are actually
+some test values and can observe how the holes in her program are actually
 used. She can then return to editing with new intuition about how to
 combine the ingredients available to her at each incomplete location to
-achieve her goals.
+achieve her goals \MattSays{The term ``ingredients available to her'' is not clear in this last sentence; maybe, ``new intuition about the run-time behavior of her program, including concrete values of variables''?}

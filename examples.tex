@@ -19,7 +19,9 @@ First, we'll consider some examples that are within the small lambda
 calculus that's given by Hazelnut.
 
 Like in standard lambda calculus, function literals do not
-evaluate further, reguardless of their contents:
+evaluate further, reguardless of their contents.
+%
+The judgement form $\pval{\hexp}$ is derivable when (a potentially incomplete) expression $\hexp$ is a value:
 \begin{align*}
   \pval{(\hlam{x}{ \hadd{9}{\hehole}})}
 \end{align*}
@@ -58,7 +60,11 @@ preservation.
 \end{align*}
 
 The first non-trivial choice is to also evaluate inside the non-empty hole
-when possible. This follows from the motivation that a programmer may run a
+when possible. 
+%
+\MattSays{Need to introduce the concept of a non-empty hole earlier, including the notation.  Perhaps introduce the concept in the intro, and the notation at the beginning of this section.}
+%
+This follows from the motivation that a programmer may run a
 incomplete program in order to gain insight into what they've written so
 far:
 \begin{align*}
