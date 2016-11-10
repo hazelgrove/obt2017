@@ -10,17 +10,20 @@ programs, either their evaluation is not permitted or is only permitted in
 cases where the evaluation trace happens to not reveal any
 incompletenesses~\cite{norell:thesis}.
 
-In our paper describing the core calculus of Hazelnut, we give static
-meaning to programs with holes in them~\cite{hazelnut:popl}.  Attempting to
-understand evaluation for such a language is a natural continuation of this
-work, and would enable a programmer to smoothly transition between editing
-and exploring the behavior of partial solutions.
+In our paper describing Hazelnut, we approach this problem by using terms
+with holes in them to represent incomplete
+programs~\cite{hazelnut:popl}. We give static meaning to such terms holes,
+and add a new notion of non-empty holes to safely contain putative
+subexpressions whose types may not yet be consistent with their
+environment. Attempting to understand evaluation for such a language is a
+natural continuation of this work, and would enable a programmer to
+smoothly transition between editing and exploring the behavior of partial
+solutions.
 
 The main challenge is to recover a meaningful notion of type safety---we
 seek recognizable statements of progress and preservation for terms with
-holes in them \MattSays{introduce the term ``hole'' earlier, when you talk
-about incomplete programs in paragraph 1}, with respect to a dynamic
-semantics that matches our intuition.
+holes in them, with respect to a dynamic semantics that matches our
+intuition.
 
 Hazelnut also gives static meaning to edit actions that transition between
 programs with holes in them, giving a rich metatheory for the process of

@@ -12,8 +12,8 @@ clear to us if that is important, or what the all of the tradeoffs would
 be, so this should be considered a stylistic detail that is not set in
 stone.
 
-Throughout, we write $\hehole$ to denote a hole in a program and $\mapsto$
-for the relation defining a small-step dynamic semantics.
+We write $\hehole$ for a hole in a program, $\hhole{\hexp}$ for a non-empty
+hole containing $\hexp$, and $\mapsto$ for the small-step relation.
 
 \subsection{Current Hazelnut}
 First, we will consider some examples that are within the small lambda
@@ -60,7 +60,7 @@ preservation.
 The first non-trivial choice is to also evaluate inside the non-empty hole
 when possible.
 %
-\MattSays{Need to introduce the concept of a non-empty hole earlier, including the notation.  Perhaps introduce the concept in the intro, and the notation at the beginning of this section.}
+%\MattSays{Need to introduce the concept of a non-empty hole earlier, including the notation.  Perhaps introduce the concept in the intro, and the notation at the beginning of this section.}
 %
 This follows from the motivation that a programmer may run a incomplete
 program in order to gain insight into what she has written so far:
@@ -76,7 +76,7 @@ program in order to gain insight into what she has written so far:
   }{\hadd{5}{\hhole{10}}}
 \end{align*}
 
-\subsection{Possible Extensions}
+\subsection{Extended Hazel}
 Now we consider a more realistic example outside the language of
 Hazelnut. Here we use an ML-like syntax that should be understood
 intuitively. We intend to extend the language to include constructs like
@@ -107,45 +107,54 @@ $\mapsto$ $\hehole_1$::$\hehole_1$::[]
 \end{lstlisting}
 Each hole in the trace is equipped with a tableau that can be inspected by
 the programmer, mapping the in-scope variables names from the source to the
-types and values at run-time. These are shown for the the two
-instantiations of $\hehole_1$ in this example in Table \ref{tabx}.
+types and values at run-time---shown for the two instantiations of
+$\hehole_1$ above in Table \ref{tabx}.
+
 \begin{table}
   \label{tabx}
-  \caption{Global caption}
-  \begin{subtable}{.6\linewidth}
-      \centering
-      \caption{}
+  \caption{hole context tableaux}
+  \begin{subtable}{.5\linewidth}
+    \centering
+        {
+          \footnotesize
           \begin{tabular}{c|c|c}
-      var & $\htau$ & val\\
-      \hline
-      f & int $\to$ int & $\lambda x.x$+1\\
-      l & int list & [1,2]\\
-      x & int & 1\\
-      xs & int list & [2]\\
-    \end{tabular}
-    \end{subtable}%
-    \begin{subtable}{.6\linewidth}
-      \centering
-      \caption{}
-    \begin{tabular}{c|c|c}
-      var & $\htau$ & val\\
-      \hline
-      f & int $\to$ int & $\lambda x.$x+1\\
-      l & int list & [2]\\
-      x & int & 2\\
-      xs & int list & []\\
-    \end{tabular}
-    \end{subtable}
+            var & $\htau$ & val\\
+            \hline
+            f & int $\to$ int & $\lambda x.x$+1\\
+            l & int list & [1,2]\\
+            x & int & 1\\
+            xs & int list & [2]\\
+          \end{tabular}
+        }
+  \end{subtable}%
+  \begin{subtable}{.5\linewidth}
+    \centering
+        {
+          \footnotesize
+          \begin{tabular}{c|c|c}
+            var & $\htau$ & val\\
+            \hline
+            f & int $\to$ int & $\lambda x.$x+1\\
+            l & int list & [2]\\
+            x & int & 2\\
+            xs & int list & []\\
+          \end{tabular}
+        }
+  \end{subtable}
 \end{table}
 
 This trace might lead the programmer to have more confidence about their
-solution so far, and make a conjecture about how to fill in the one
-hole. If they replace the empty hole with $\hhole{\texttt{f x}}$ and
-reevaluate the test, the trace produced would quickly sugguest that they
-had the solution:
+solution so far, and to have a good idea for a candidate
+completion---namely $\hhole{\texttt{f x}}$. If she makes this update and
+then reruns the example, she will see that she has indeed satisfied the
+specification.
 \begin{lstlisting}
    map ($\lambda x.$x+1) [1, 2]
-$\mapsto$ $\hhole{xx}_1$::(map ($\lambda x.$x+1) [2])
-$\mapsto$ $\hhole{xx}_1$::$\hhole{xx}_1$::(map ($\lambda x.$x+1) [])
-$\mapsto$ $\hhole{xx}_1$::$\hhole{xx}_1$::[]
+$\mapsto$ $\hhole{\hap{(\lambda x.x+1)}{1}}_1$::(map ($\lambda x.$x+1) [2])
+$\mapsto$ $\hhole{\hadd{1}{1}}_1$::(map ($\lambda x.$x+1) [2])
+$\mapsto$ $\hhole{2}_1$::(map ($\lambda x.$x+1) [2])
+$\mapsto$ $\hhole{2}_1$::$\hhole{\hap{\lambda x.x+1}{2}}_1$::(map ($\lambda x.$x+1) [])
+$\mapsto$ $\hhole{2}_1$::$\hhole{\hadd{2}{1}}_1$::(map ($\lambda x.$x+1) [])
+$\mapsto$ $\hhole{2}_1$::$\hhole{3}_1$::(map ($\lambda x.$x+1) [])
+$\mapsto$ $\hhole{2}_1$::$\hhole{3}_1$::[]
 \end{lstlisting}
