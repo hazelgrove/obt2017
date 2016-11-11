@@ -3,6 +3,7 @@
 \newcommand{\rrparenthesiscolor}{\textcolor{violet}{\rrparenthesis}}
 
 \newcommand{\pval}[1]{{#1} ~\mathbf{value}}
+\newcommand{\pindet}[1]{{#1} ~\mathbf{indet}}
 \newcommand{\pfinal}[1]{{#1} ~\mathbf{final}}
 \newcommand{\pstep}[2]{{#1} \longmapsto {#2}}
 
@@ -26,8 +27,8 @@
 \newcommand{\hapP}[2]{(#1)~(#2)} % Extra paren around function term
 \newcommand{\hnum}[1]{\underline{#1}}
 \newcommand{\hadd}[2]{#1 + #2}
-\newcommand{\hehole}{\llparenthesiscolor\rrparenthesiscolor}
-\newcommand{\hhole}[1]{\llparenthesiscolor#1\rrparenthesiscolor}
+\newcommand{\hehole}[1]{\llparenthesiscolor\rrparenthesiscolor_{#1}}
+\newcommand{\hhole}[2]{\llparenthesiscolor#1\rrparenthesiscolor_{#2}}
 \newcommand{\hindet}[1]{\lceil#1\rceil}
 \newcommand{\hinj}[2]{\texttt{inj}_{#1}({#2})}
 \newcommand{\hcase}[5]{\texttt{case}({#1},{#2}.{#3},{#4}.{#5})}
