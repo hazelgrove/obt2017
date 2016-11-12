@@ -10,27 +10,23 @@ notions of non-empty holes or holes in types which appear prominently in
 Hazelnut, so there is work to be done to extend it to our use case.
 
 Since complete terms coincide exactly with the simply typed lambda
-calculus, the dynamic semantics for them are well understood. Therefore,
-all the examples here are terms with holes in them. (TODO MAKE THIS FIT,
-mention normal progress and preservation)
+calculus, it is important that any dynamic semantics for possibly
+incomplete programs agrees with the standard treatment.
 
-In order to consider type safety, we introduce a new judgement
-$\pfinal{\hexp}$ for incomplete programs that we cannot evaluate further
-because they are values or blocked by a hole. Progress states that a
-well-typed incomplete program will either step or is $\mathbf{final}$;
-preservation states that stepping preserves the type of an incomplete
-program and that no new hole names are created by evaluation.
-
+Progress states that a well-typed incomplete program will either step, is a
+value, or is indeterminate. Preservation states that stepping preserves the
+type of an incomplete program and that no new hole names are created by
+evaluation.
 \begin{conjecture}[Progress]
   If $\emptyset \vdash \hexp{} : \htau{} \dashv \Delta$ then either
   \begin{enumerate}[label=\roman*)]
   \item there exists $\hexp'$ such that $\pstep{\hexp{}}{\hexp{}'}$, or
-  \item $\hexp ~\mathbf{final}$
+  \item $\pval{\hexp}$, or
+  \item $\pindet{\hexp}$
   \end{enumerate}
 \end{conjecture}
-
 \begin{conjecture}[Preservation]
   If $\emptyset \vdash \hexp{} : \htau{} \dashv \Delta$ and
-  $\pstep{\hexp}{\hexp'}$ then $\emptyset \vdash \hexp' : \htau{} \dashv
-  \Delta'$ and $\Delta' \subseteq \Delta$.
+  $\pstep{\hexp}{\hexp'}$ then $\emptyset \vdash \hexp'
+  : \htau{} \dashv \Delta'$ and $\Delta' \subseteq \Delta$.
 \end{conjecture}

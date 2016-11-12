@@ -1,33 +1,40 @@
-To motivate a dynamic semantics for incomplete programs, we consider a
-series of examples of how terms with holes in them might be evaluated.
-
-TODO insert grammar for incomplete terms, punt to POPL paper explicitly for
-statics and more deetz.
-
-We write $\hehole{u}$ for a hole named $u$ in a program named,
-$\hhole{\hexp}{u}$ for a non-empty hole named $u$ containing $\hexp$, and
-$\mapsto$ for the small-step relation. Hole names are unique in a term.
-
-\subsection{Current Hazelnut}
-First, we will consider some examples that are within the small lambda
-calculus given by Hazelnut.
-
-The judgement form $\pval{\hexp}$ is derivable when a potentially
-incomplete term is a value:
+Following our Hazelnut work, such incomplete terms and their types are
+given by
 \begin{align*}
-  \pval{(\hlam{x}{ \hadd{9}{\hehole{u}}})}
+  \htau & ::=
+  \tarr{\htau}{\htau} ~\vert~
+  \tnum ~\vert~
+  \tehole{u}
+  \\
+  \hexp & ::=   x ~\vert~
+  \hlam{x}{\hexp} ~\vert~
+  \hap{\hexp}{\hexp} ~\vert~
+  \hnum{n} ~\vert~
+  \hadd{\hexp}{\hexp} ~\vert~
+  (\hexp : \htau) ~\vert~
+  \hehole{u} ~\vert~
+  \hhole{\hexp}{u}
+\end{align*}
+where $\hehole{u}$ and $\hhole{\hexp}{u}$ are holes named $u$ and the
+latter contains $\hexp$. Hole names are unique. We write $\mapsto$ for the
+small-step relation. The judgement form $\pval{\hexp}$ is derivable when a
+potentially incomplete term is a value, whereas $\pindet{\hexp}$ is
+derivable when a potentially incomplete term is a
+\textit{indeterminate}---when its evaluation cannot proceed because of a
+hole in a critical place.
+\begin{align*}
+  \pval{(\hlam{x}{ \hadd{9}{\hehole{u}}})}\\
+  \pindet{\hadd{9}{\hehole{u}}}
 \end{align*}
 
+To motivate a dynamic semantics for incomplete programs, we consider a
+series of examples of how terms with holes in them might be evaluated. In
+each, evaluation continues until the term in question is either a value or
+indeterminate.
+
+\subsection{Current Hazelnut}
 A function applied to a value steps to the substitution as usual:
 \begin{align*}
-  \pstep
-      {
-        \hap{\hlam{x}{\hadd{9}{\hehole{u}}}}{5}
-      }
-      {
-        \hadd{9}{\hehole{u}}
-      }
-      \\
       \pstep
       {
         \hap{\hlam{x}{\hadd{x}{\hehole{u}}}}{5}
@@ -36,40 +43,25 @@ A function applied to a value steps to the substitution as usual:
         \hadd{5}{\hehole{u}}
       }
 \end{align*}
-The judgement form $\pindet{\hexp}$ TODO
-
-Substitutions also occur inside non-empty holes: otherwise, free variables
-would appear in the result, which would break any familiar notion of
-preservation.
+Substitutions occur inside non-empty holes, even if the type of the
+contents is not yet consistent with its surroundings. Otherwise, free
+variables would appear in the result, breaking any familiar notion of
+preservation. For instance, if $f : \tarr{\tnum}{\tarr{\tnum}{\tnum}}$,
 \begin{align*}
   \pstep
       {
-        \hap{\hlam{x}{\hadd{x}{\hhole{x}{u}}}}{5}
+        \hap{\hlam{x}{\hadd{x}{\hhole{f~x}}{u}}}{5}
       }
       {
-        \hadd{5}{\hhole{5}{u}}
+        \hadd{5}{\hhole{f~5}{u}}
       }
 \end{align*}
-We also evaluate inside the non-empty holes:
-\begin{align*}
-  \pstep{
-    \pstep
-        {
-          \hap{\hlam{x}{\hadd{x}{\hhole{\hadd{x}{x}}}{u}}}{5}
-        }
-        {
-          \hadd{5}{\hhole{\hadd{5}{5}}{u}}
-        }
-  }{\hadd{5}{\hhole{10}{u}}}
-\end{align*}
-This allows a programmer to observe the behavior of incomplete solutions
-that may not yet have a type consistent with their surroundings.
 
 \subsection{Extended Hazel}
-To consider a more realistic we use an ML-like syntax outside Hazelnut that
-should be understood intuitively. Believe an understanding of the dynamic
-semantics will guide an extension of Hazelnut to include constructs like
-pattern matching, ADTs, and recursive functions.
+To consider writing a more realistic program, we use an ML-like syntax
+outside Hazelnut that should be understood intuitively. We believe an
+understanding of the dynamic semantics will guide an extension of Hazelnut
+to include constructs like pattern matching, ADTs, and recursive functions.
 
 Imagine a programmer implementing $$\mathbf{map} : (\alpha \to \beta) \to
 \alpha ~\mathit{list} \to \beta ~\mathit{list}$$ from the informal
@@ -79,24 +71,25 @@ She might arrive at the incomplete term
 fun map f [] = []
   | map f (x::xs) = $\hehole{u}$::(map f l)
 \end{lstlisting}
-if she knows the pattern of recursion, but are not sure what to do with
-each element yet. Here, evaluating the incomplete program on a small
-example produces a trace: because the body of the function is not yet final
-after substitution, the function calls continue to evaluate.
+if she knows the pattern of recursion, but is not sure what to do with each
+element. Evaluating this incomplete program on a small example produces a
+trace: because the body of the function after substitution is not a value
+and not indeterminate, evaluation continues.
 \begin{lstlisting}
    map ($\lambda x.$x+1) [1, 2]
-$\mapsto$ $\hehole{u}$::(map ($\lambda x.$x+1) [2])
-$\mapsto$ $\hehole{u}$::$\hehole{u}$::(map ($\lambda x.$x+1) [])
-$\mapsto$ $\hehole{u}$::$\hehole{u}$::[]
+$\mapsto^*$ $\hehole{u}$::(map ($\lambda x.$x+1) [2])
+$\mapsto^*$ $\hehole{u}$::$\hehole{u}$::(map ($\lambda x.$x+1) [])
+$\mapsto^*$ $\hehole{u}$::$\hehole{u}$::[]
 \end{lstlisting}
-Each hole in the trace is equipped with a tableau that can be inspected by
-the programmer, mapping the in-scope variables names from the source to the
-types and values at run-time and showing the goal-type for the hole---shown
-for the two instantiations of $\hehole{u}$ above in Table \ref{tabx}.
+Each hole in the trace has an associated environment with the overall goal
+type for the hole and a mapping from in-scope variables names and their
+types to run-time values. The environments for the last two holes above are
+in Table \ref{tabx}; note that the same hole may appear multiple times in a
+trace and, therefore, with different environments.
 
 \begin{table}[h!]
   \begin{subtable}{.5\linewidth}
-    \caption{goal: $\beta=$ int}
+    \caption{goal: int (from $\beta$)}
     \centering
         {
           \footnotesize
@@ -111,7 +104,7 @@ for the two instantiations of $\hehole{u}$ above in Table \ref{tabx}.
         }
   \end{subtable}%
   \begin{subtable}{.5\linewidth}
-    \caption{goal: $\beta=$ int}
+    \caption{goal: int (from $\beta$)}
     \centering
         {
           \footnotesize
@@ -125,28 +118,28 @@ for the two instantiations of $\hehole{u}$ above in Table \ref{tabx}.
           \end{tabular}
         }
   \end{subtable}
-  \caption{hole environments from trace}
+  \caption{hole environments at end of trace}
   \label{tabx}
 \end{table}
 
 This trace might lead the programmer to have more confidence about their
 solution so far, and to have a good idea for a candidate
-completion---namely $\hhole{\texttt{f x}}{u}$. If she makes this update and
-then reruns the example, she will see that she has indeed satisfied the
-specification.
-\hspace{1cm}
+completion---namely filling the hole with $\hhole{\texttt{f x}}{u}$. If she
+makes this change and then reruns her example, she will see that she has
+indeed satisfied the specification, and should now replace the hole with
+its contents:
 \begin{lstlisting}
    map ($\lambda x.$x+1) [1, 2]
-$\mapsto$ $\hhole{\hap{(\lambda x.x+1)}{1}}{u}$::(map ($\lambda x.$x+1) [2])
-$\mapsto$ $\hhole{\hadd{1}{1}}{u}$::(map ($\lambda x.$x+1) [2])
-$\mapsto$ $\hhole{2}{u}$::(map ($\lambda x.$x+1) [2])
-$\mapsto$ $\hhole{2}{u}$::$\hhole{\hap{\lambda x.x+1}{2}}{u}$::(map ($\lambda x.$x+1) [])
-$\mapsto$ $\hhole{2}{u}$::$\hhole{\hadd{2}{1}}{u}$::(map ($\lambda x.$x+1) [])
-$\mapsto$ $\hhole{2}{u}$::$\hhole{3}{u}$::(map ($\lambda x.$x+1) [])
-$\mapsto$ $\hhole{2}{u}$::$\hhole{3}{u}$::[]
+$\mapsto*$ $\hhole{\hap{(\lambda x.x+1)}{1}}{u}$::(map ($\lambda x.$x+1) [2])
+$\mapsto*$ $\hhole{\hadd{1}{1}}{u}$::(map ($\lambda x.$x+1) [2])
+$\mapsto*$ $\hhole{2}{u}$::(map ($\lambda x.$x+1) [2])
+$\mapsto*$ $\hhole{2}{u}$::$\hhole{\hap{\lambda x.x+1}{2}}{u}$::(map ($\lambda x.$x+1) [])
+$\mapsto*$ $\hhole{2}{u}$::$\hhole{\hadd{2}{1}}{u}$::(map ($\lambda x.$x+1) [])
+$\mapsto*$ $\hhole{2}{u}$::$\hhole{3}{u}$::(map ($\lambda x.$x+1) [])
+$\mapsto*$ $\hhole{2}{u}$::$\hhole{3}{u}$::[]
 \end{lstlisting}
 
-These examples are written in the style of an eager evaluation. It is not
-clear to us if that is important, or what the all of the tradeoffs would
-be, so this should be considered a stylistic detail that is not set in
-stone.
+%% These examples are written in the style of an eager evaluation. It is not
+%% clear to us if that is important, or what the all of the tradeoffs would
+%% be, so this should be considered a stylistic detail that is not set in
+%% stone.
