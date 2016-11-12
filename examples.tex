@@ -130,11 +130,11 @@ indeed satisfied the specification, and should now replace the hole with
 its contents:
 \begin{lstlisting}
    map ($\lambda x.$x+1) [1, 2]
-$\mapsto*$ $\hhole{\hap{(\lambda x.x+1)}{1}}{u}$::(map ($\lambda x.$x+1) [2])
-$\mapsto*$ $\hhole{\hadd{1}{1}}{u}$::(map ($\lambda x.$x+1) [2])
-$\mapsto*$ $\hhole{2}{u}$::(map ($\lambda x.$x+1) [2])
-$\mapsto*$ $\hhole{2}{u}$::$\hhole{\hap{\lambda x.x+1}{2}}{u}$::(map ($\lambda x.$x+1) [])
-$\mapsto*$ $\hhole{2}{u}$::$\hhole{\hadd{2}{1}}{u}$::(map ($\lambda x.$x+1) [])
-$\mapsto*$ $\hhole{2}{u}$::$\hhole{3}{u}$::(map ($\lambda x.$x+1) [])
-$\mapsto*$ $\hhole{2}{u}$::$\hhole{3}{u}$::[]
+$\mapsto^*$ $\hhole{\hap{(\lambda x.x+1)}{1}}{u}$::(map ($\lambda x.$x+1) [2])
+$\mapsto^*$ $\hhole{\hadd{1}{1}}{u}$::(map ($\lambda x.$x+1) [2])
+$\mapsto^*$ $\hhole{2}{u}$::(map ($\lambda x.$x+1) [2])
+$\mapsto^*$ $\hhole{2}{u}$::$\hhole{\hap{\lambda x.x+1}{2}}{u}$::(map ($\lambda x.$x+1) [])
+$\mapsto^*$ $\hhole{2}{u}$::$\hhole{\hadd{2}{1}}{u}$::(map ($\lambda x.$x+1) [])
+$\mapsto^*$ $\hhole{2}{u}$::$\hhole{3}{u}$::(map ($\lambda x.$x+1) [])
+$\mapsto^*$ $\hhole{2}{u}$::$\hhole{3}{u}$::[]
 \end{lstlisting}
