@@ -1,4 +1,4 @@
-\documentclass[nocopyrightspace,10pt]{sigplanconf}
+\documentclass[nocopyrightspace,10pt,letter]{sigplanconf}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -65,9 +65,7 @@
 }
 \makeatother
 
-\usepackage{todonotes}
 \usepackage{xcolor}
-
 
 \makeatletter
 \providecommand*{\dashv}{%
@@ -98,23 +96,24 @@ literate={=>}{$\Rightarrow$}2
 }
 
 \title{Running Incomplete Programs}
-\authorinfo{
-  Ian Voysey$^1$
-  \and Cyrus Omar$^1$
-  \and Matthew A. Hammer$^2$
-}
-           {
-             \begin{tabular}{ccc}
- 	       \begin{tabular}{c}
- $^1$Carnegie Mellon University (USA)\\
- \textsf{\hphantom{$^1$}\{comar, iev\}@cs.cmu.edu}
- \end{tabular} &
-  \begin{tabular}{c}
- $^2$University of Colorado Boulder (USA)\\
- \textsf{\hphantom{$^1$}matthew.hammer@colorado.edu}
- \end{tabular}
- \end{tabular}
-}
+\authorinfo
+    {
+      Ian Voysey$^1$
+      \and Cyrus Omar$^1$
+      \and Matthew A. Hammer$^2$
+    }
+    {
+      \begin{tabular}{ccc}
+ 	\begin{tabular}{c}
+          $^1$Carnegie Mellon University (USA)\\
+          \textsf{\hphantom{$^1$}\{comar, iev\}@cs.cmu.edu}
+        \end{tabular} &
+        \begin{tabular}{c}
+          $^2$University of Colorado Boulder (USA)\\
+          \textsf{\hphantom{$^1$}matthew.hammer@colorado.edu}
+        \end{tabular}
+      \end{tabular}
+    }
 
 \maketitle
 \begin{abstract}
