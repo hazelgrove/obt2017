@@ -1,6 +1,4 @@
-We typically only consider running programs that we have finished
-writing. Programmers therefore end up inserting ad hoc dummy values into
-their intermediate edits to be able to observe their dynamic behavior. In
-this work we present a mechanism for the safe evaluation programs that are
-still incomplete by propagating holes through steps whenever possible,
-substantially tightening the development loop.
+We typically only consider running programs that are completely written. Programmers end up inserting ad hoc dummy values into
+their incomplete programs to receive feedback about its dynamic behavior. In 
+this work we suggest a evaluation mechanism for incomplete programs, i.e. programs that still contain holes. Rather than immediately failing when a hole is encountered, we propagate holes as far as possible. The result is a substantially tighter development loop. 
+

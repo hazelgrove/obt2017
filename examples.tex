@@ -1,5 +1,6 @@
-Following our Hazelnut work, such incomplete terms and their types are
-given by
+%!TEX root = dynamics-obt17.tex
+
+In our Hazelnut paper, incomplete expressions and types are governed by the following grammar:
 \begin{align*}
   \htau & ::=
   \tarr{\htau}{\htau} ~\vert~
@@ -15,34 +16,36 @@ given by
   \hehole{u} ~\vert~
   \hhole{\hexp}{u}
 \end{align*}
-where $\hehole{u}$ and $\hhole{\hexp}{u}$ are holes named $u$ and the
-latter contains $\hexp$. Hole names are unique. We write $\mapsto$ for the
-small-step relation. The judgement form $\pval{\hexp}$ is derivable when a
-potentially incomplete term is a value, whereas $\pindet{\hexp}$ is
-derivable when a potentially incomplete term is a
-\textit{indeterminate}---when its evaluation cannot proceed because of a
-hole in a critical place.
+where $\hehole{u}$ and $\hhole{\hexp}{u}$ are holes. For our purposes here, it helps to give each hole a unique name, $u$. 
+
+We write $\mapsto$ for the
+small-step relation. The judgement $\pval{\hexp}$ is derivable when a
+$\hexp$ is a value, in the standard sense. For example:
 \begin{align*}
-  \pval{(\hlam{x}{ \hadd{9}{\hehole{u}}})}\\
+  \pval{(\hlam{x}{ \hadd{9}{\hehole{u}}})}
+\end{align*} 
+The judgement $\pindet{\hexp}$ is
+derivable when $\hexp$ is 
+\textit{indeterminate}---when its evaluation cannot proceed because of a
+hole in a critical place (roughly, in elimination position.) For example, the following cannot continue to step, nor is it a value:
+\begin{align*}
   \pindet{\hadd{9}{\hehole{u}}}
 \end{align*}
 
-To motivate a dynamic semantics for incomplete programs, we consider a
-series of examples of how terms with holes in them might be evaluated. In
-each, evaluation continues until the term in question is either a value or
-indeterminate.
+Evaluation continues until the term in question is either a value or
+indeterminate. Collectively, we call these \emph{final} evaluation states.
 
-\subsection{Current Hazelnut}
-A function applied to a value steps to the substitution as usual:
+A function applied to a hole steps as usual:
 \begin{align*}
       \pstep
       {
-        \hap{\hlam{x}{\hadd{x}{\hehole{u}}}}{5}
+        \hap{\hlam{x}{\hadd{x}{\hehole{u}}}}{\hehole{u'}}
       }
       {
-        \hadd{5}{\hehole{u}}
+        \hadd{\hehole{u'}}{\hehole{u}}
       }
 \end{align*}
+
 Substitutions occur inside non-empty holes, even if the type of the
 contents is not yet consistent with its surroundings. Otherwise, free
 variables would appear in the result, breaking any familiar notion of
@@ -58,10 +61,7 @@ preservation. For instance, if $f : \tarr{\tnum}{\tarr{\tnum}{\tnum}}$,
 \end{align*}
 
 \subsection{Extended Hazel}
-To consider writing a more realistic program, we use an ML-like syntax
-outside Hazelnut that should be understood intuitively. We believe an
-understanding of the dynamic semantics will guide an extension of Hazelnut
-to include constructs like pattern matching, ADTs, and recursive functions.
+To consider a more realistic example, we consider a hypothetical extension of Hazelnut with ML-like features, such as polymorphism, pattern matching, ADTs, and recursive functions.
 
 Imagine a programmer implementing $$\mathbf{map} : (\alpha \to \beta) \to
 \alpha ~\mathit{list} \to \beta ~\mathit{list}$$ from the informal
@@ -73,23 +73,21 @@ fun map f [] = []
 \end{lstlisting}
 if she knows the pattern of recursion, but is not sure what to do with each
 element. Evaluating this incomplete program on a small example produces a
-trace: because the body of the function after substitution is not a value
-and not indeterminate, evaluation continues.
+trace:
 \begin{lstlisting}
    map ($\lambda x.$x+1) [1, 2]
 $\mapsto^*$ $\hehole{u}$::(map ($\lambda x.$x+1) [2])
 $\mapsto^*$ $\hehole{u}$::$\hehole{u}$::(map ($\lambda x.$x+1) [])
 $\mapsto^*$ $\hehole{u}$::$\hehole{u}$::[]
 \end{lstlisting}
-Each hole in the trace has an associated environment with the overall goal
+Notice that a hole can become duplicated during evaluation. Each hole in the trace has an associated environment with the overall goal
 type for the hole and a mapping from in-scope variables names and their
-types to run-time values. The environments for the last two holes above are
-in Table \ref{tabx}; note that the same hole may appear multiple times in a
-trace and, therefore, with different environments.
+types to run-time values. The environments for the two occurrences of the hole above are
+in Table \ref{tabx}.
 
 \begin{table}[h!]
   \begin{subtable}{.5\linewidth}
-    \caption{goal: int (from $\beta$)}
+    \caption{hole type: $\beta=\texttt{int}$}
     \centering
         {
           \footnotesize
@@ -104,7 +102,7 @@ trace and, therefore, with different environments.
         }
   \end{subtable}%
   \begin{subtable}{.5\linewidth}
-    \caption{goal: int (from $\beta$)}
+    \caption{hole type: $\beta=\texttt{int}$}
     \centering
         {
           \footnotesize
@@ -118,13 +116,12 @@ trace and, therefore, with different environments.
           \end{tabular}
         }
   \end{subtable}
-  \caption{hole environments at end of trace}
+  \caption{The environment around each occurrence of the hole.}
   \label{tabx}
 \end{table}
 
 This trace might lead the programmer to have more confidence about their
-solution so far, and to have a good idea for a candidate
-completion---namely filling the hole with $\hhole{\texttt{f x}}{u}$. If she
+solution so far. The editor might display the values from the environment during the edit process, making it easier for the programmer to fill in the hole. Here, the programmer might fill the hole with $\hhole{\texttt{f x}}{u}$. If she
 makes this change and then reruns her example, she will see that she has
 indeed satisfied the specification, and should now replace the hole with
 its contents:
@@ -138,3 +135,4 @@ $\mapsto^*$ $\hhole{2}{u}$::$\hhole{\hadd{2}{1}}{u}$::(map ($\lambda x.$x+1) [])
 $\mapsto^*$ $\hhole{2}{u}$::$\hhole{3}{u}$::(map ($\lambda x.$x+1) [])
 $\mapsto^*$ $\hhole{2}{u}$::$\hhole{3}{u}$::[]
 \end{lstlisting}
+
