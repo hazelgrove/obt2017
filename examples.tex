@@ -1,6 +1,7 @@
 %!TEX root = dynamics-obt17.tex
 
-In our Hazelnut paper, incomplete expressions and types are governed by the following grammar:
+In our Hazelnut paper, incomplete expressions and types are governed by the
+following grammar:
 \begin{align*}
   \htau & ::=
   \tarr{\htau}{\htau} ~\vert~
@@ -16,18 +17,19 @@ In our Hazelnut paper, incomplete expressions and types are governed by the foll
   \hehole{u} ~\vert~
   \hhole{\hexp}{u}
 \end{align*}
-where $\hehole{u}$ and $\hhole{\hexp}{u}$ are holes. For our purposes here, it helps to give each hole a unique name, $u$. 
+where $\hehole{u}$ and $\hhole{\hexp}{u}$ are holes. Each hole has a unique
+name, $u$.
 
-We write $\mapsto$ for the
-small-step relation. The judgement $\pval{\hexp}$ is derivable when a
-$\hexp$ is a value, in the standard sense. For example:
+We write $\mapsto$ for the small-step relation. The judgement
+$\pval{\hexp}$ is derivable when a $\hexp$ is a value, in the standard
+sense. For example:
 \begin{align*}
   \pval{(\hlam{x}{ \hadd{9}{\hehole{u}}})}
-\end{align*} 
-The judgement $\pindet{\hexp}$ is
-derivable when $\hexp$ is 
+\end{align*}
+The judgement $\pindet{\hexp}$ is derivable when $\hexp$ is
 \textit{indeterminate}---when its evaluation cannot proceed because of a
-hole in a critical place (roughly, in elimination position.) For example, the following cannot continue to step, nor is it a value:
+hole in a critical place (roughly, in elimination position.) For example,
+the following cannot continue to step, nor is it a value:
 \begin{align*}
   \pindet{\hadd{9}{\hehole{u}}}
 \end{align*}
@@ -61,7 +63,9 @@ preservation. For instance, if $f : \tarr{\tnum}{\tarr{\tnum}{\tnum}}$,
 \end{align*}
 
 \subsection{Extended Hazel}
-To consider a more realistic example, we consider a hypothetical extension of Hazelnut with ML-like features, such as polymorphism, pattern matching, ADTs, and recursive functions.
+To consider a more realistic example, we consider a hypothetical extension
+of Hazelnut with features such as polymorphism, pattern matching, ADTs, and
+recursive functions in ML-like syntax.
 
 Imagine a programmer implementing $$\mathbf{map} : (\alpha \to \beta) \to
 \alpha ~\mathit{list} \to \beta ~\mathit{list}$$ from the informal
@@ -80,10 +84,11 @@ $\mapsto^*$ $\hehole{u}$::(map ($\lambda x.$x+1) [2])
 $\mapsto^*$ $\hehole{u}$::$\hehole{u}$::(map ($\lambda x.$x+1) [])
 $\mapsto^*$ $\hehole{u}$::$\hehole{u}$::[]
 \end{lstlisting}
-Notice that a hole can become duplicated during evaluation. Each hole in the trace has an associated environment with the overall goal
-type for the hole and a mapping from in-scope variables names and their
-types to run-time values. The environments for the two occurrences of the hole above are
-in Table \ref{tabx}.
+Notice that a hole can become duplicated during evaluation. Each hole in
+the trace has an associated environment with the overall goal type for the
+hole and a mapping from in-scope variables names and their types to
+run-time values. The environments for the two occurrences of the hole above
+are in Table \ref{tabx}.
 
 \begin{table}[h!]
   \begin{subtable}{.5\linewidth}
@@ -116,15 +121,17 @@ in Table \ref{tabx}.
           \end{tabular}
         }
   \end{subtable}
-  \caption{The environment around each occurrence of the hole.}
+  \caption{environment around each occurrence of $\hehole{u}$}
   \label{tabx}
 \end{table}
 
 This trace might lead the programmer to have more confidence about their
-solution so far. The editor might display the values from the environment during the edit process, making it easier for the programmer to fill in the hole. Here, the programmer might fill the hole with $\hhole{\texttt{f x}}{u}$. If she
-makes this change and then reruns her example, she will see that she has
-indeed satisfied the specification, and should now replace the hole with
-its contents:
+solution so far. An editor might display the associated environments during
+the edit process, making it easier for the programmer to explore how to
+fill in the hole. Here, following the types, the programmer might fill the
+hole with $\hhole{\texttt{f x}}{u}$. If she makes this change and then
+reruns her example, she will see that she has indeed satisfied the
+specification, and should now replace the hole with its contents:
 \begin{lstlisting}
    map ($\lambda x.$x+1) [1, 2]
 $\mapsto^*$ $\hhole{\hap{(\lambda x.x+1)}{1}}{u}$::(map ($\lambda x.$x+1) [2])
@@ -135,4 +142,3 @@ $\mapsto^*$ $\hhole{2}{u}$::$\hhole{\hadd{2}{1}}{u}$::(map ($\lambda x.$x+1) [])
 $\mapsto^*$ $\hhole{2}{u}$::$\hhole{3}{u}$::(map ($\lambda x.$x+1) [])
 $\mapsto^*$ $\hhole{2}{u}$::$\hhole{3}{u}$::[]
 \end{lstlisting}
-

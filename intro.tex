@@ -1,4 +1,5 @@
 %!TEX root = dynamics-obt17.tex
+
 Programming language definitions assign meaning to \textit{complete}
 programs. Programmers, however, spend a substantial amount of time
 interacting with \textit{incomplete} programs, using tools like program
@@ -6,26 +7,27 @@ editors or live programming environments that interleave editing and
 evaluation. Semanticists have paid comparatively little attention to these
 interactions, so the designers of tools like these lack foundational
 principles comparable to those available to language designers. For
-example, in languages like Agda that do have some notion of incomplete
-programs, either their evaluation is not permitted or is only permitted in
-cases where the evaluation trace happens to not reveal any
-incompletenesses~\cite{norell:thesis}.
+example, Agda does provide a notion of incomplete programs and a mechanism
+to evaluate terms with holes in them, but it fails as soon as it actually
+encounters a hole~\cite{norell:thesis}.
 
-In our paper describing the Hazelnut structure editor, appearing at POPL 2017, we consider the static semantics of incomplete
-programs, i.e. programs with holes in expressions and types~\cite{hazelnut:popl}. We also introduce a notion of non-empty holes, which serve to safely encapsulate putative
-subexpressions whose types may not yet be consistent with the type that is expected. The ``beaten track'' strategy would be to define a dynamics only for programs without holes, or to have holes raise exceptions. Our ``off the beaten path'' suggestion is to continue evaluation ``past'' a hole, so as to reveal more about its potential dynamic behavior. This could benefit programmers by tightening the feedback loop between editing and evaluation even beyond that available in live programming tools to date \cite{burckhardt2013s}.
+In our paper describing the Hazelnut structure editor, appearing at POPL
+2017, we consider the static semantics of incomplete programs,
+i.e. programs with holes in expressions and types~\cite{hazelnut:popl}. We
+also introduce a notion of non-empty hole, which serves to safely
+encapsulate putative subexpressions whose types may not yet be consistent
+with the type that is expected. The ``beaten track'' strategy would be to
+define a dynamics only for programs without holes, or to have holes act
+like exceptions and end evaluation. Instead, our ``off the beaten track''
+suggestion is to continue evaluation past a hole, revealing more about the
+dynamic behavior of the incomplete term. This could benefit programmers by
+tightening the feedback loop between editing and evaluation, even beyond
+what is available in current live programming tools~\cite{burckhardt2013s}.
 
-The main technical challenge is to recover a meaningful notion of type safety---we
-seek recognizable statements of progress and preservation for terms with
-holes in them, with respect to a dynamic semantics that matches our
-intuition.
-
-% Hazelnut also gives static meaning to edit actions that transition between
-% programs with holes in them, giving a rich metatheory for the process of
-% writing and editing programs. The next step, after defining a dynamics, would be to define other live programming features this facet of the work
-% amounts to live programming writ large~. The existing
-% live programming tools do not let the programmer run programs that are not
-% complete yet unless a placeholder value is used to make them seem complete.
+The main technical challenge is to recover a meaningful notion of type
+safety---we seek recognizable statements of progress and preservation for
+terms with holes in them, with respect to a dynamic semantics that matches
+our intuition.
 
 In the ideal system, a Hazelnut programmer writes their program with
 confidence that her edits are all safe. When she arrives at a candidate,
@@ -34,4 +36,4 @@ on specific values and observe how the holes in her program are actually
 used in evaluation. She can then return to editing the program, working
 towards a complete program with better insight into how the concrete values
 of variables are used. This insight can help her develop intuition about
-how to fill each hole in the incomplete program. It can also help the editor help the programmer.
+how to fill each hole in the incomplete program.

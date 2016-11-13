@@ -5,17 +5,14 @@ from work on contextual modal type theory
 (CMTT)~\cite{DBLP:journals/tocl/NanevskiPP08}. This allows a programmer to
 view the trace as above and identify where each hole is used. CMTT is the
 Curry-Howard interpretation of contextual modal logic, which gives us
-confidence that our approach is rooted in the logical tradition. CMTT does not
-provide a way to reason about the dynamics of terms with free metavariables, nor does it include the  
-notions of non-empty holes or holes in types which appear prominently in
-Hazelnut, so there is work to be done to extend it to our use case.
-
-Since complete terms coincide exactly with the simply typed lambda
-calculus, it is important that any dynamic semantics for possibly
-incomplete programs agrees with the standard treatment.
+confidence that our approach is rooted in the logical tradition. CMTT does
+not provide a way to reason about the dynamics of terms with free
+metavariables, nor does it include the notions of non-empty holes or holes
+in types which appear prominently in Hazelnut, so there is work to be done
+to extend it to our use case.
 
 Progress states that a well-typed incomplete program will either step, is a
-value, or is indeterminate. 
+value, or is indeterminate.
 \begin{conjecture}[Progress]
   If $\emptyset \vdash \hexp{} : \htau{} \dashv \Delta$ then either
   \begin{enumerate}[label=\roman*)]
@@ -24,14 +21,21 @@ value, or is indeterminate.
   \item $\pindet{\hexp}$
   \end{enumerate}
 \end{conjecture}
-Complete programs should never enter an indeterminate state, i.e. the usual notion of Progress should also be provable for complete programs.
 
-Preservation states that stepping preserves the
-type of an incomplete program and that no new hole names are created by
-evaluation.
+Preservation states that stepping preserves the type of an incomplete
+program and that no new hole names are created by evaluation.
 \begin{conjecture}[Preservation]
   If $\emptyset \vdash \hexp{} : \htau{} \dashv \Delta$ and
   $\pstep{\hexp}{\hexp'}$ then $\emptyset \vdash \hexp'
   : \htau{} \dashv \Delta'$ and $\Delta' \subseteq \Delta$.
 \end{conjecture}
-Here, we need to explicitly consider the possibility of duplication of holes, but ensure that they continue to appear at the same type and with compatible closures.
+Here, we need to explicitly consider the possibility of duplication of
+holes, but ensure that they continue to appear at the same type and with
+compatible closures.
+
+Since complete terms coincide exactly with the simply typed lambda
+calculus, it is important that any dynamic semantics and associated
+metatheory for possibly incomplete terms agree with the standard
+treatment. For example, complete programs should not become indeterminate
+during evaluation, and standard type saftey should be provable for complete
+programs without changing the small-step relation.
