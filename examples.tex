@@ -1,7 +1,7 @@
 %!TEX root = dynamics-obt17.tex
 
-In our Hazelnut paper, incomplete expressions and types are governed by the
-following grammar:
+In our Hazelnut paper, incomplete expressions and types are given by the
+grammar:
 \begin{align*}
   \htau & ::=
   \tarr{\htau}{\htau} ~\vert~
@@ -17,8 +17,7 @@ following grammar:
   \hehole{u} ~\vert~
   \hhole{\hexp}{u}
 \end{align*}
-where $\hehole{u}$ and $\hhole{\hexp}{u}$ are holes. Each hole has a unique
-name, $u$.
+where $\hehole{u}$ and $\hhole{\hexp}{u}$ are holes with unique names $u$.
 
 We write $\mapsto$ for the small-step relation. The judgement
 $\pval{\hexp}$ is derivable when a $\hexp$ is a value, in the standard
@@ -31,13 +30,13 @@ The judgement $\pindet{\hexp}$ is derivable when $\hexp$ is
 hole in a critical place (roughly, in elimination position.) For example,
 the following cannot continue to step, nor is it a value:
 \begin{align*}
-  \pindet{\hadd{9}{\hehole{u}}}
+  \pindet{(\hadd{9}{\hehole{u}})}
 \end{align*}
 
 Evaluation continues until the term in question is either a value or
 indeterminate. Collectively, we call these \emph{final} evaluation states.
 
-A function applied to a hole steps as usual:
+A function applied to a hole, or any other final term, steps as usual:
 \begin{align*}
       \pstep
       {
@@ -62,7 +61,7 @@ preservation. For instance, if $f : \tarr{\tnum}{\tarr{\tnum}{\tnum}}$,
       }
 \end{align*}
 
-\subsection{Extended Hazel}
+\paragraph{Extended Hazel}
 To consider a more realistic example, we consider a hypothetical extension
 of Hazelnut with features such as polymorphism, pattern matching, ADTs, and
 recursive functions in ML-like syntax.
