@@ -72,7 +72,7 @@ specification that the function be applied to every list element uniformly.
 She might arrive at the incomplete term
 \begin{lstlisting}
 fun map f [] = []
-  | map f (x::xs) = $\hehole{u}$::(map f l)
+  | map f (x::xs) = $\hehole{u}$::(map f xs)
 \end{lstlisting}
 if she knows the pattern of recursion, but is not sure what to do with each
 element. Evaluating this incomplete program on a small example produces a
