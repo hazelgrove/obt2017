@@ -1,4 +1,15 @@
- beyond what is already studied and implemented in other languages.
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 6
+TITLE: Running Incomplete Programs
+AUTHORS: Ian Voysey, Cyrus Omar and Matthew Hammer
+
+Overall evaluation: -1
+
+----------- Overall evaluation -----------
+This paper proposes to explore the design and metatheory of programming languages capable of evaluating incomplete programs. This is particularly valuable when exploring definitions and types -- being able to evaluate and test incomplete code can help develop programs interactively or incrementally.
+
+I find the proposed work interesting and relevant to a conference such as OBT, yet there are already several existing languages and quite some related work. The paper mentions Agda's 'holes' -- a feature that has also recently been adopted by the Haskell compiler GHC, but is also supported by Idris and, to some extent, Coq -- whose type theories all goes far beyond the simple types proposed here. I'd be more strongly in favour of accepting this paper if it was more clear how the proposed theory goes beyond what is already studied and implemented in other languages.
 
 
 ----------------------- REVIEW 2 ---------------------
@@ -9,20 +20,7 @@ AUTHORS: Ian Voysey, Cyrus Omar and Matthew Hammer
 Overall evaluation: 1
 
 ----------- Overall evaluation -----------
-
-The paper discusses an approach to evaluating programs with
-holes/metavariables, and how to phrase progress & preservation in the
-presence of holes. The authors discuss a bit about the details of
-evaluation in this situation (e.g., that each hole carries a
-environment/substitution), though not as many details as I would hope. In
-particular, the introduction states how Hazelnut differs from other
-systems, e.g., by not throwing an exception when a hole is encountered, but
-not much is said about what *does* happen when evaluation encounters a
-hole. Judgmentally it's "indeterminate", but it's not clear what exactly
-that means operationally (does evaluation stop and return a closure or
-other structure for the expression? if it's a filled hole does evaluation
-continue inside the hole? etc). Also, no comparison is drawn to evaluation
-of open terms.
+The paper discusses an approach to evaluating programs with holes/metavariables, and how to phrase progress & preservation in the presence of holes. The authors discuss a bit about the details of evaluation in this situation (e.g., that each hole carries a environment/substitution), though not as many details as I would hope. In particular, the introduction states how Hazelnut differs from other systems, e.g., by not throwing an exception when a hole is encountered, but not much is said about what *does* happen when evaluation encounters a hole. Judgmentally it's "indeterminate", but it's not clear what exactly that means operationally (does evaluation stop and return a closure or other structure for the expression? if it's a filled hole does evaluation continue inside the hole? etc). Also, no comparison is drawn to evaluation of open terms.
 
 
 ----------------------- REVIEW 3 ---------------------
@@ -73,12 +71,12 @@ Some related work:
 
 - The authors may be interested in the work on refinement calculi by
   Ewen Denney. See the section 'Refinement' on
-    http://www.irisa.fr/lande/denney/ . Denney's refinement calculus
-      contains an indeterminate expression ?_\sigma for every type \sigma
-        that can stand for any value of that type. He developed semantics
-	  and a calculus of refinement steps for developing programs in his
-	    system.
+  http://www.irisa.fr/lande/denney/ . Denney's refinement calculus
+  contains an indeterminate expression ?_\sigma for every type \sigma
+  that can stand for any value of that type. He developed semantics
+  and a calculus of refinement steps for developing programs in his
+  system.
 
 - The idea of named holes that could stand for "anything" reminded me
   of work by Leonid Libkin on the semantics of NULL in relational
-    databases: http://homepages.inf.ed.ac.uk/libkin/papers/ijcai15.pdf
+  databases: http://homepages.inf.ed.ac.uk/libkin/papers/ijcai15.pdf
