@@ -103,3 +103,38 @@ Some related work:
 - The idea of named holes that could stand for "anything" reminded me of
   work by Leonid Libkin on the semantics of NULL in relational databases:
   http://homepages.inf.ed.ac.uk/libkin/papers/ijcai15.pdf
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 6
+TITLE: Running Incomplete Programs
+AUTHORS: Ian Voysey, Cyrus Omar and Matthew Hammer
+
+Overall evaluation: 2
+
+----------- Overall evaluation -----------
+
+The abstract proposes to run incomplete programs as far as possible instead
+of immediately failing on observing a hole. This proposal complements
+Hazelnut structure editor appearing at POPL 2017, where the authors
+consider the static semantics of incomplete programs. The interesting idea
+is the integration of such a system in an editor, which benefits the
+programmer by providing feedback by evaluation. It would be interesting to
+consider such a system in the context of a richer language. I consider this
+to be a good choice for OBT and recommend acceptance.
+
+Other comments
+-----------------
+* fun map f [] = []
+    | map f (x::xs) =   u::(map f l)
+
+should be
+
+fun map f [] = []
+    | map f (x::xs) =   u::(map f xs)
+
+* Table 1 makes references to variable l which is undefined.
+
+* The execution of programs with holes reminds me of the work by Eric
+  Seidel et al. "Dynamic witnesses for static type errors", ICFP
+  2016. While the goal of the works are different, it would be useful to
+  understand the overlap.
